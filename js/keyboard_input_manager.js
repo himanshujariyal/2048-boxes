@@ -56,22 +56,15 @@ KeyboardInputManager.prototype.listen = function () {
     }
   });
 
-  /*function dojump(event) {
-    var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
-                    event.shiftKey;
+ var retry = document.querySelector(".retry-button");
+  retry.addEventListener("click", this.restart.bind(this));
+  retry.addEventListener("touchend", this.restart.bind(this));
 
-    if (!modifiers) {
-      event.preventDefault();
-      self.emit("jump");
-      
-    }
-    if (event.which === 32) self.restart.bind(self)(event);
-  }*/
-
-  //document.addEventListener("keydown", dojump);
-
-
+  var keepPlaying = document.querySelector(".keep-playing-button");
+  keepPlaying.addEventListener("click", this.keepPlaying.bind(this));
+  keepPlaying.addEventListener("touchend", this.keepPlaying.bind(this));
 };
+
 
 KeyboardInputManager.prototype.restart = function (event) {
   event.preventDefault();

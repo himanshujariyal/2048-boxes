@@ -60,8 +60,25 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
   this.birdinn.textContent = s;
 
   window.requestAnimationFrame(function () {
+
+    grid.cells.forEach(function (column) {
+      column.forEach(function (cell) {
+        if (cell) {
+          self.addTile(cell);
+        }
+      });
+    });
+
     self.updateScore(s);
     self.updateBestScore(Math.floor(metadata.bestScore));
+
+    if (metadata.terminated) {
+      if (metadata.over) {
+        self.message(false); // You lose
+      } else if (metadata.won) {
+        self.message(true); // You win!
+      }
+    }
   });
 };
 

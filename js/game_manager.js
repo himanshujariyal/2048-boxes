@@ -1,6 +1,4 @@
-var myhero = { x: 5 , y: 5 };
-//var grid = new
-//var myhero = new Tile(this.grid.randomAvailableCell(), value);
+var myhero;
 function GameManager(size, InputManager, Actuator, ScoreManager) {
   this.size         = size; // Size of the grid
   this.inputManager = new InputManager;
@@ -43,20 +41,31 @@ GameManager.prototype.setup = function () {
   console.log(this.grid);
   //console.log(this.size);
   this.score = 0;
+  this.over  = false;
+  this.won   = false;
+  this.keepPlaying = false;
+
+
   this.birdpos = 0.5;
   this.birdspd = 0;
   this.ab = 1;
   this.cd = 1;
 
-  //add start tile
+
+
+
+   //add start tile
+    console.log("add start tile");
     var value = Math.random() < 0.9 ? 2 : 4;
     var tile = new Tile(this.grid.randomAvailableCell(), value);
     console.log(tile);
     //console.log(myhero);
-    myhero.x = tile.x;
-    myhero.y = tile.y;
+    myhero = tile
     console.log(myhero);
     this.grid.insertTile(tile);
+    
+    //update the actutator
+    this.actuate();
 };
 
 // Set up the initial tiles to start the game with
@@ -83,7 +92,10 @@ GameManager.prototype.actuate = function () {
 
   this.actuator.actuate(this.grid, {
     score:      this.score,
+    over:       this.over,
+    won:        this.won,
     bestScore:  this.scoreManager.get(),
+    terminated: this.isGameTerminated(),
     birdpos:    this.birdpos,
     ab:         this.ab,
     cd:         this.cd
@@ -137,11 +149,19 @@ GameManager.prototype.move = function (direction) {
         var positions = self.findFarthestPosition(cell, vector);
         var next      = self.grid.cellContent(positions.next);
         cell = { x: myhero.x + vector.x, y: myhero.y + vector.y };
-        //check if myhero 
-        self.moveTile(tile, cell);
-        myhero=cell;
-        console.log("updated my hero")
-        console.log(myhero)
+        //check if myhero goes out of arena 
+        if(cell.x > 9 || cell.y > 9 || cell.x <0 || cell.y <0){
+          console.log("collison with wall game over")
+          this.over = true; // Game over!
+        }
+        else{
+          self.moveTile(tile, cell);
+          myhero=cell;
+          console.log("updated my hero")
+          console.log(myhero)
+          moved=true;
+        }
+        
        }
    else{
         console.log("hero tile missing")
@@ -261,15 +281,16 @@ GameManager.prototype.move = function (direction) {
 
   if (moved) {
     //this.addRandomTile();
-    alert('yes moved');
+   // alert('yes moved');
 
     if (!this.movesAvailable()) {
-      //this.over = true; // Game over!
+      this.over = true; // Game over!
       alert('game over');
     }
 
     this.actuate();
   }
+
 };
 
 // Get the vector representing the chosen direction
