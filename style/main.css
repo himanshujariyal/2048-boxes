@@ -148,15 +148,15 @@ hr {
 .game-container {
   margin-top: 40px;
   position: relative;
-  padding: 15px;
+  padding: 10px;
   cursor: default;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   background: #bbada0;
   border-radius: 6px;
-  width: 620px;
-  height: 620px;
+  width: 610px;
+  height: 610px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }

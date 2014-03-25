@@ -394,9 +394,11 @@ GameManager.prototype.positionsEqual = function (first, second) {
 GameManager.prototype.timer = function () {
 
   var self = this;
-
+  
   // move
   this.birdpos += this.birdspd;
+  console.log("Bird pos:  "+this.birdpos)
+  console.log("Bird spd:  "+this.birdspd)
   this.birdspd += 0.00015 / (this.birdspd + 0.1);
 
   if (this.birdpos > 1 && this.birdspd > 0) this.birdspd = -this.birdspd;
