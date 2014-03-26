@@ -39,47 +39,33 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
   else if (s >    2) classes.push("tile-4")
   else               classes.push("tile-2");
 
-  this.applyClasses(this.birdobj, classes);
+  //this.applyClasses(this.birdobj, classes);
   this.applyClasses(this.myheroobj, classes);
 
-  //var zonesize = this.gridContainer.clientWidth;
-  var zonesize = 600;
-  //var morepos = 0.75 * (metadata.score - s);
+  var zonesize = this.gridContainer.clientHeight;
+  var morepos = 0.75 * (metadata.score - s);
 
-  //for left to right
-  var morepos = (metadata.score - s);
-  //from right to left
-  var moreposrev = 1- morepos;
   this.birdobj.style.top = metadata.birdpos * zonesize + "px";
-
-  var selector = {
-    0: zonesize/60000, // 1st row oth row ommited
-    1: (zonesize/60000)*2,  // 2nd row
-    2: (zonesize/60000)*3//in 3rd row  
-  };
-
+  //left right
+  this.birdobj.style.left = metadata.birdposleft * zonesize + "px";
 
   this.blockobja.style.top = [0.5 , 0   , 0   ][metadata.ab] * zonesize + "px";
   this.blockobjb.style.top = [0.75, 0.75, 0.25][metadata.ab] * zonesize + "px";
   this.blockobjc.style.top = [0.5 , 0   , 0   ][metadata.cd] * zonesize + "px";
   this.blockobjd.style.top = [0.75, 0.75, 0.25][metadata.cd] * zonesize + "px";
-  
-   //console.log("morepos:  "+morepos)
-  // console.log("0.5-morepos:"+(0.5-morepos))
-  // console.log("0.5mor*zonesi"+(morepos)*zonesize)
 
-  this.blockobja.style.left = (moreposrev) * zonesize + "px";
-  this.blockobjb.style.left = (morepos) * zonesize + "px";
-  this.blockobjc.style.left = (moreposrev) * zonesize + "px";
-  this.blockobjd.style.left = (morepos) * zonesize + "px";
-  //debugger;
-  //console.log("++++++++++++end debug++++++++")
+  this.blockobja.style.left = (0.5  - morepos) * zonesize + "px";
+  this.blockobjb.style.left = (0.5  - morepos) * zonesize + "px";
+  this.blockobjc.style.left = (1.25 - morepos) * zonesize + "px";
+  this.blockobjd.style.left = (1.25 - morepos) * zonesize + "px";
+
   this.birdinn.textContent = s;
 
   window.requestAnimationFrame(function () {
-
+   // console.log(grid.cells);
     grid.cells.forEach(function (column) {
       column.forEach(function (cell) {
+        //console.log(cell);
         if (cell) {
           self.addTile(cell);
         }

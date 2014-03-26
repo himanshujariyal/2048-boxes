@@ -47,6 +47,7 @@ GameManager.prototype.setup = function () {
 
 
   this.birdpos = 0.5;
+  this.birdposleft = 0.5;
   this.birdspd = 0;
   this.ab = 1;
   this.cd = 1;
@@ -97,6 +98,7 @@ GameManager.prototype.actuate = function () {
     bestScore:  this.scoreManager.get(),
     terminated: this.isGameTerminated(),
     birdpos:    this.birdpos,
+    birdposleft:this.birdposleft,
     ab:         this.ab,
     cd:         this.cd
   });
@@ -139,7 +141,7 @@ GameManager.prototype.move = function (direction) {
 
 
   //just move now
-  console.log("in-move");console.log(vector);
+  //console.log("in-move");console.log(vector);
   //cell is our hero
   cell = { x: myhero.x , y: myhero.y };
    //check if annother block exists
@@ -396,13 +398,14 @@ GameManager.prototype.timer = function () {
   var self = this;
   
   // move
-  this.birdpos += this.birdspd;
-  console.log("Bird pos:  "+this.birdpos)
-  console.log("Bird spd:  "+this.birdspd)
-  this.birdspd += 0.00015 / (this.birdspd + 0.1);
+  //this.birdpos += this.birdspd;
+  //this.birdpos += 0.00012;
+  //console.log("Bird pos:  "+this.birdpos)
+  //console.log("Bird spd:  "+this.birdspd)
+  //this.birdspd += 0.00015 / (this.birdspd + 0.1);
 
-  if (this.birdpos > 1 && this.birdspd > 0) this.birdspd = -this.birdspd;
-  if (this.birdpos < -0.25 && this.birdspd < 0) this.birdspd = -this.birdspd;
+  //if (this.birdpos > 1 && this.birdspd > 0) this.birdspd = -this.birdspd;
+  //if (this.birdpos < -0.25 && this.birdspd < 0) this.birdspd = -this.birdspd;
 
   this.score += 1 / 64;
 
@@ -422,14 +425,69 @@ GameManager.prototype.timer = function () {
     this.cd = Math.floor(Math.random() * 3);
   }
 
+
   setTimeout(function () {self.timer();}, 384 / Math.sqrt(this.score + 256));
   this.actuate();
 }
 
-GameManager.prototype.jump = function () {
-  if (this.birdspd < 0) {
-    this.birdspd = -0.03;
-  } else {
-    this.birdspd = -0.025;
-  }
+GameManager.prototype.jump = function (direction) {
+
+  // 0: up, 1: right, 2:down, 3: left
+  var self = this;
+
+  if (this.isGameTerminated()) return; // Don't do anything if the game's over
+
+  var vector     = this.getVector(direction);
+  //var traversals = this.buildTraversals(vector);
+  var moved      = false;
+  
+  //this.birdpos = 0.5;
+  //this.birdposleft = 0.5;
+
+//console.log("vec")
+//console.log(vector)
+          if(vector.x == 0 && vector.y == -1){
+            //up
+            if(this.birdpos < 0.1){
+              this.over = true;
+            }
+            else{
+              this.birdpos -= 0.1;
+              moved = true;
+            }
+          }
+          else if(vector.x == 1 && vector.y == 0){
+            //risht
+            if(this.birdposleft > 0.8){
+              this.over = true;
+            }
+            else{
+              this.birdposleft += 0.1;
+              moved = true;
+            }
+          }
+          else if(vector.x == 0 && vector.y == 1){
+            //down
+            if(this.birdpos > 0.8){
+              this.over = true;
+            }
+            else{
+              this.birdpos += 0.1;
+              moved = true;
+            }
+          }
+          else{
+            //left
+            if(this.birdposleft == 0){
+              this.over = true;
+            }
+            else{
+              this.birdposleft -= 0.1;
+              moved = true;
+            }
+          }
+
+
+
+  console.log(this.birdpos)
 }
